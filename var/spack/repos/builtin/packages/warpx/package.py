@@ -18,7 +18,6 @@ class Warpx(MakefilePackage):
     url      = "https://github.com/ECP-WarpX/WarpX"
 
     version('master', git='https://github.com/ECP-WarpX/WarpX.git', tag='master')
-    version('dev', git='https://github.com/ECP-WarpX/WarpX.git', tag='dev')
 
     depends_on('mpi')
 
@@ -38,13 +37,13 @@ class Warpx(MakefilePackage):
 
     resource(name='amrex',
              git='https://github.com/AMReX-Codes/amrex.git',
-             tag='development',
-             destination='.')
+             tag='master',
+             destination='./amrex')
 
     resource(name='picsar',
              git='https://bitbucket.org/berkeleylab/picsar.git',
              tag='master',
-             destination='.')
+             destination='./picsar')
 
     def edit(self, spec, prefix):
 
@@ -59,8 +58,8 @@ class Warpx(MakefilePackage):
             return repr(s in spec).upper()
 
         makefile = FileFilter('GNUmakefile')
-        makefile.filter('AMREX_HOME .*', 'AMREX_HOME = amrex')
-        makefile.filter('PICSAR_HOME .*', 'PICSAR_HOME = picsar')
+        makefile.filter('AMREX_HOME .*', 'AMREX_HOME = amrex/src')
+        makefile.filter('PICSAR_HOME .*', 'PICSAR_HOME = picsar/src')
         makefile.filter('COMP .*', 'COMP = {0}'.format(comp))
         makefile.filter('DIM .*',
                         'DIM = {0}'.format(int(spec.variants['dims'].value)))
